@@ -35,9 +35,15 @@ namespace TeamCitySharp.ActionTypes
       return agentWrapper.Agent;
     }
 
+    public void Enable(string agentId, bool enable)
+    {
+      const string urlPart = "/agents/id:{0}/enabled";
+      m_caller.PutFormat(enable, HttpContentTypes.TextPlain, urlPart, agentId );
+    }
+    
     public void Delete(string agentId)
     {
-      const string urlPart = "/app/rest/agents/id:{0}";
+      const string urlPart = "/agents/id:{0}";
       m_caller.DeleteFormat( HttpContentTypes.TextPlain, urlPart, agentId);
     }
   }
