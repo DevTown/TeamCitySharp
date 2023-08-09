@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TeamCitySharp.Connection;
 using TeamCitySharp.DomainEntities;
+using TeamCitySharp.Locators;
 
 namespace TeamCitySharp.ActionTypes
 {
@@ -35,6 +37,50 @@ namespace TeamCitySharp.ActionTypes
       return agentWrapper.Agent;
     }
 
+    public List<Agent> OnlyDisconnected()
+    {
+      return ByAgentLocator(AgentLocator.OnlyDisconnected());
+    }
+    
+    public List<Agent> OnlyDisabled()
+    {
+      return ByAgentLocator(AgentLocator.OnlyDisabled());
+    }
+    
+    public List<Agent> ByAgentLocator(AgentLocator locator)
+    {
+      var agentWrapper =
+        m_caller.Get<AgentWrapper>(
+          ActionHelper.CreateFieldUrl($"/agents?locator={locator}", m_fields));
+
+      return int.Parse(agentWrapper.Count) > 0 ? agentWrapper.Agent : new List<Agent>();
+    }
+    
+    
+    public List<Agent> ByAgentLocator(AgentLocator locator, List<String> param)
+    {
+      var strParam = GetParamLocator(param);
+      var agentWrapper =
+        m_caller.Get<AgentWrapper>(
+          ActionHelper.CreateFieldUrl($"/agents?locator={locator}{strParam}", m_fields));
+
+      return int.Parse(agentWrapper.Count) > 0 ? agentWrapper.Agent : new List<Agent>();
+    }
+    
+    private static string GetParamLocator(List<string> param)
+    {
+      var strParam = "";
+      if (param != null)
+      {
+        foreach (var tmpParam in param)
+        {
+          strParam += ",";
+          strParam += tmpParam;
+        }
+      }
+      return strParam;
+    }
+    
     public void Enable(string agentId, bool enable)
     {
       const string urlPart = "/agents/id:{0}/enabled";

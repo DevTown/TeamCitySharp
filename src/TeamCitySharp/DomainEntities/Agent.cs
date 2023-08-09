@@ -19,6 +19,16 @@ namespace TeamCitySharp.DomainEntities
 
     [JsonProperty("webUrl")]
     public string WebUrl { get; set; }
+    
+    [JsonProperty("connected")]
+    public string Connected { get; set; }
+    
+    [JsonProperty("enabled")]
+    public string Enabled { get; set; }
+    
+    [JsonProperty("authorized")]
+    public string Authorized { get; set; }
+
 
 
     public override string ToString()
